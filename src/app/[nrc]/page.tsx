@@ -51,6 +51,7 @@ async function LeadContent({ nrc }: { nrc: string }) {
     planos,
     qtdVeiculos: placas.length,
     situacao: lead.situacao_conta,
+    mensalidadeAtual: lead.mensalidade_total || 0,
   };
 
   return <FunnelClient lead={leadData} />;

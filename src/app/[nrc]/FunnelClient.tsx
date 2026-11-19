@@ -16,6 +16,7 @@ interface LeadData {
   planos: string[];
   qtdVeiculos: number;
   situacao: number;
+  mensalidadeAtual: number;
 }
 
 interface PixData {
@@ -38,9 +39,11 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
     cpf: lead.cpf || '',
   });
 
-  const promoPrice = 29.90;
-  const regularPrice = 49.90;
-  const monthsFree = lead.qtdVeiculos >= 3 ? 12 : lead.qtdVeiculos >= 2 ? 9 : 6;
+  const promoPrice = 29.90; // valor do ano todo
+  const mensalidadeAtual = lead.mensalidadeAtual || 49.90;
+  const custoAnualAtual = mensalidadeAtual * 12;
+  const economia = custoAnualAtual - promoPrice;
+  const descontoPct = Math.round((economia / custoAnualAtual) * 100);
 
   const handleCopyPix = () => {
     if (pixData?.copyPaste) {
@@ -150,34 +153,31 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               {lead.firstName}, voce foi selecionado!
             </h1>
             <p className="text-[#666] text-base sm:text-lg">
-              40% de desconto + adesao e frete gratis
+              Pague o ano inteiro por apenas R$ 29,90
             </p>
           </div>
 
           <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 sm:p-8 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
               <div>
-                <p className="text-[#999] text-sm mb-1">Plano Sem Parar</p>
-                <h2 className="text-[#0e0d0d] text-xl font-bold mb-2">TAG de Pedagio + Estacionamentos</h2>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#999] text-sm line-through">R$ {regularPrice.toFixed(2).replace('.', ',')}/mes</span>
-                  <span className="bg-[#d60b52] text-white text-xs font-semibold px-2 py-0.5 rounded">-40%</span>
-                </div>
+                <p className="text-[#999] text-sm mb-1">Voce paga hoje</p>
+                <h2 className="text-[#0e0d0d] text-lg font-semibold mb-2">R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes</h2>
+                <p className="text-[#999] text-sm">= R$ {custoAnualAtual.toFixed(2).replace('.', ',')}/ano</p>
               </div>
+              <div className="text-3xl text-[#999]">→</div>
               <div className="text-left sm:text-right">
-                <p className="text-[#999] text-xs mb-1">Por apenas</p>
+                <p className="text-[#999] text-xs mb-1">Oferta especial</p>
                 <p className="text-[#d60b52] text-4xl sm:text-5xl font-bold">
                   R$ {promoPrice.toFixed(2).replace('.', ',')}
-                  <span className="text-lg font-normal text-[#666]">/mes</span>
                 </p>
-                <p className="text-[#666] text-sm mt-1">por {monthsFree} meses</p>
+                <p className="text-[#666] text-sm mt-1">pelo ano inteiro</p>
               </div>
             </div>
           </div>
 
           <div className="bg-[#f0fdf4] border border-[#86efac] rounded-xl p-4 mb-6">
             <p className="text-[#166534] text-sm text-center font-medium">
-              Voce economiza R$ {((regularPrice - promoPrice) * monthsFree + 40 + 24.90).toFixed(2).replace('.', ',')} com esta oferta
+              Economia de R$ {economia.toFixed(2).replace('.', ',')} ({descontoPct}% de desconto)
             </p>
           </div>
 
@@ -306,8 +306,16 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               <span className="text-[#666]">Plano Sem Parar</span>
               <span className="text-[#0e0d0d] font-semibold">TAG + Estacionamentos</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[#666]">Valor</span>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[#666]">Periodo</span>
+              <span className="text-[#0e0d0d] font-semibold">12 meses</span>
+            </div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[#666]">Valor normal</span>
+              <span className="text-[#999] line-through">R$ {custoAnualAtual.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-[#e6e6e6]">
+              <span className="text-[#0e0d0d] font-semibold">Total a pagar</span>
               <span className="text-[#d60b52] font-bold text-xl">R$ {promoPrice.toFixed(2).replace('.', ',')}</span>
             </div>
           </div>
@@ -317,7 +325,7 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             disabled={loading || !formData.name || !formData.email || !formData.cpf}
             className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-3"
           >
-            {loading ? 'Gerando PIX...' : 'Finalizar e pagar R$ ' + promoPrice.toFixed(2).replace('.', ',')}
+            {loading ? 'Gerando PIX...' : 'Pagar R$ ' + promoPrice.toFixed(2).replace('.', ',') + ' pelo ano'}
           </button>
           <button onClick={() => setStep(2)} className="w-full text-[#666] text-sm py-2 hover:text-[#0e0d0d] transition-colors">
             ← Voltar
@@ -398,7 +406,7 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           <Image src="/logo.png" alt="Sem Parar" width={80} height={24} className="h-6 w-auto mx-auto mb-4 opacity-50" />
           <p className="text-[#999] text-xs mb-2">DBTrans Internet Ltda. · CNPJ 10.558.633/0001-61</p>
           <p className="text-[#ccc] text-xs">
-            Oferta valida ate 30/11/2024. Apos o periodo promocional, o valor de R$ {regularPrice.toFixed(2).replace('.', ',')}/mes sera cobrado.
+            Oferta valida ate 30/11/2024. Apos o periodo promocional, o valor de R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes sera cobrado.
           </p>
         </div>
       </footer>
