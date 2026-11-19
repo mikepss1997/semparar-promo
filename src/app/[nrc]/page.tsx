@@ -43,6 +43,7 @@ async function LeadContent({ nrc }: { nrc: string }) {
     nome: lead.nome,
     firstName,
     email: lead.email,
+    cpf: lead.cpf || '',
     cidade: lead.end_cidade,
     estado: lead.end_estado,
     placas,
@@ -57,12 +58,10 @@ async function LeadContent({ nrc }: { nrc: string }) {
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center">
-        <div className="bg-[#FFD100] text-black font-black text-2xl px-6 py-3 rounded-xl mb-6 inline-block animate-pulse">
-          SEM PARAR
-        </div>
-        <p className="text-gray-400">Carregando sua oferta exclusiva...</p>
+        <div className="w-12 h-12 border-4 border-[#e6e6e6] border-t-[#d60b52] rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-[#666]">Carregando sua oferta...</p>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface LeadData {
@@ -8,6 +8,7 @@ interface LeadData {
   nome: string;
   firstName: string;
   email: string;
+  cpf: string;
   cidade: string;
   estado: string;
   placas: string[];
@@ -17,24 +18,92 @@ interface LeadData {
   situacao: number;
 }
 
+interface PixData {
+  id: string;
+  qrCodeBase64: string;
+  copyPaste: string;
+  amount: number;
+  expiresAt: string;
+}
+
 export default function FunnelClient({ lead }: { lead: LeadData }) {
   const [step, setStep] = useState(1);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [pixData, setPixData] = useState<PixData | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid' | 'expired'>('pending');
+  const [formData, setFormData] = useState({
+    name: lead.nome || '',
+    email: lead.email || '',
+    cpf: lead.cpf || '',
+  });
 
   const promoPrice = 29.90;
   const regularPrice = 49.90;
   const monthsFree = lead.qtdVeiculos >= 3 ? 12 : lead.qtdVeiculos >= 2 ? 9 : 6;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(`BFVIP${lead.nrc}`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyPix = () => {
+    if (pixData?.copyPaste) {
+      navigator.clipboard.writeText(pixData.copyPaste);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 3));
+  const generatePix = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/pix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nrc: lead.nrc,
+          name: formData.name,
+          email: formData.email,
+          cpf: formData.cpf,
+          amount: promoPrice,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao gerar PIX');
+      }
+
+      const pix = await response.json();
+      setPixData(pix);
+      setStep(4);
+    } catch (error) {
+      alert('Erro ao gerar PIX. Tente novamente.');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!pixData?.id || paymentStatus !== 'pending') return;
+
+    const checkStatus = async () => {
+      try {
+        const response = await fetch(`/api/pix?id=${pixData.id}`);
+        const data = await response.json();
+
+        if (data.status === 'paid' || data.status === 'approved' || data.status === 'completed') {
+          setPaymentStatus('paid');
+        }
+      } catch (error) {
+        console.error('Error checking payment status:', error);
+      }
+    };
+
+    const interval = setInterval(checkStatus, 5000);
+    return () => clearInterval(interval);
+  }, [pixData?.id, paymentStatus]);
+
+  const nextStep = () => setStep(s => Math.min(s + 1, 4));
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <header className="border-b border-[#e6e6e6]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -50,31 +119,29 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
       <div className="bg-[#f8f8f8] border-b border-[#e6e6e6]">
         <div className="max-w-[800px] mx-auto px-4 py-4">
           <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${step >= 1 ? 'bg-[#d60b52] text-white' : 'bg-[#e6e6e6] text-[#999]'}`}>1</span>
-              <span className={step >= 1 ? 'text-[#0e0d0d] font-medium' : 'text-[#999]'}>Sua oferta</span>
-            </div>
-            <div className="flex-1 h-[2px] bg-[#e6e6e6] mx-4">
-              <div className={`h-full bg-[#d60b52] transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${step >= 2 ? 'bg-[#d60b52] text-white' : 'bg-[#e6e6e6] text-[#999]'}`}>2</span>
-              <span className={step >= 2 ? 'text-[#0e0d0d] font-medium' : 'text-[#999]'}>Beneficios</span>
-            </div>
-            <div className="flex-1 h-[2px] bg-[#e6e6e6] mx-4">
-              <div className={`h-full bg-[#d60b52] transition-all ${step >= 3 ? 'w-full' : 'w-0'}`} />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${step >= 3 ? 'bg-[#d60b52] text-white' : 'bg-[#e6e6e6] text-[#999]'}`}>3</span>
-              <span className={step >= 3 ? 'text-[#0e0d0d] font-medium' : 'text-[#999]'}>Finalizar</span>
-            </div>
+            {[
+              { num: 1, label: 'Oferta' },
+              { num: 2, label: 'Beneficios' },
+              { num: 3, label: 'Dados' },
+              { num: 4, label: 'Pagamento' },
+            ].map((s, i) => (
+              <div key={s.num} className="flex items-center">
+                <div className="flex items-center gap-2">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${step >= s.num ? 'bg-[#d60b52] text-white' : 'bg-[#e6e6e6] text-[#999]'}`}>
+                    {step > s.num ? '✓' : s.num}
+                  </span>
+                  <span className={`hidden sm:inline ${step >= s.num ? 'text-[#0e0d0d] font-medium' : 'text-[#999]'}`}>{s.label}</span>
+                </div>
+                {i < 3 && <div className={`w-8 sm:w-16 h-[2px] mx-2 ${step > s.num ? 'bg-[#d60b52]' : 'bg-[#e6e6e6]'}`} />}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Step 1: Oferta */}
       {step === 1 && (
-        <main className="max-w-[800px] mx-auto px-4 py-8 sm:py-12">
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
           <div className="text-center mb-8">
             <span className="inline-block bg-[#d60b52] text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
               BLACK FRIDAY
@@ -87,7 +154,6 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             </p>
           </div>
 
-          {/* Card de oferta */}
           <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 sm:p-8 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
               <div>
@@ -109,7 +175,6 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             </div>
           </div>
 
-          {/* Seu perfil */}
           <div className="bg-[#f8f8f8] rounded-xl p-6 mb-8">
             <p className="text-[#999] text-xs font-semibold tracking-wider mb-4">SEU PERFIL SEM PARAR</p>
             <div className="grid grid-cols-3 gap-4 text-center">
@@ -128,10 +193,7 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             </div>
           </div>
 
-          <button
-            onClick={nextStep}
-            className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors"
-          >
+          <button onClick={nextStep} className="w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors">
             Continuar
           </button>
         </main>
@@ -139,14 +201,10 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
 
       {/* Step 2: Beneficios */}
       {step === 2 && (
-        <main className="max-w-[800px] mx-auto px-4 py-8 sm:py-12">
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
           <div className="text-center mb-8">
-            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">
-              O que esta incluso
-            </h1>
-            <p className="text-[#666] text-base sm:text-lg">
-              Tudo que voce precisa em um so lugar
-            </p>
+            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">O que esta incluso</h1>
+            <p className="text-[#666] text-base sm:text-lg">Tudo que voce precisa em um so lugar</p>
           </div>
 
           <div className="space-y-4 mb-8">
@@ -159,117 +217,174 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4 bg-white border border-[#e6e6e6] rounded-xl p-5">
                 <span className="text-2xl">{item.icon}</span>
-                <div>
+                <div className="flex-1">
                   <p className="text-[#0e0d0d] font-semibold">{item.title}</p>
                   <p className="text-[#666] text-sm">{item.desc}</p>
                 </div>
-                <span className="ml-auto text-[#d60b52]">✓</span>
+                <span className="text-[#d60b52] text-xl">✓</span>
               </div>
             ))}
           </div>
 
           <div className="bg-[#f8f8f8] rounded-xl p-6 mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#666] text-sm">Taxa de adesao</span>
-              <div className="flex items-center gap-2">
-                <span className="text-[#999] text-sm line-through">R$ 40,00</span>
-                <span className="text-[#0e0d0d] font-semibold">Gratis</span>
+            {[
+              { label: 'Taxa de adesao', old: 'R$ 40,00', new: 'Gratis' },
+              { label: 'Entrega', old: 'R$ 24,90', new: 'Gratis' },
+              { label: 'Fidelidade', old: null, new: 'Sem fidelidade' },
+            ].map((item, i) => (
+              <div key={i} className={`flex items-center justify-between ${i < 2 ? 'mb-4' : ''}`}>
+                <span className="text-[#666] text-sm">{item.label}</span>
+                <div className="flex items-center gap-2">
+                  {item.old && <span className="text-[#999] text-sm line-through">{item.old}</span>}
+                  <span className="text-[#0e0d0d] font-semibold">{item.new}</span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#666] text-sm">Entrega</span>
-              <div className="flex items-center gap-2">
-                <span className="text-[#999] text-sm line-through">R$ 24,90</span>
-                <span className="text-[#0e0d0d] font-semibold">Gratis</span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[#666] text-sm">Fidelidade</span>
-              <span className="text-[#0e0d0d] font-semibold">Sem fidelidade</span>
-            </div>
+            ))}
           </div>
 
           <div className="flex gap-3">
-            <button
-              onClick={() => setStep(1)}
-              className="flex-1 bg-white border border-[#e6e6e6] text-[#0e0d0d] font-semibold text-base py-4 rounded-xl hover:bg-[#f8f8f8] transition-colors"
-            >
+            <button onClick={() => setStep(1)} className="flex-1 bg-white border border-[#e6e6e6] text-[#0e0d0d] font-semibold text-base py-4 rounded-xl hover:bg-[#f8f8f8] transition-colors">
               Voltar
             </button>
-            <button
-              onClick={nextStep}
-              className="flex-1 bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors"
-            >
+            <button onClick={nextStep} className="flex-1 bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors">
               Continuar
             </button>
           </div>
         </main>
       )}
 
-      {/* Step 3: Finalizar */}
+      {/* Step 3: Dados */}
       {step === 3 && (
-        <main className="max-w-[800px] mx-auto px-4 py-8 sm:py-12">
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
           <div className="text-center mb-8">
-            <span className="inline-block text-4xl mb-4">🎉</span>
-            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">
-              Sua oferta esta pronta!
-            </h1>
-            <p className="text-[#666] text-base sm:text-lg">
-              Use o cupom abaixo para garantir o desconto
-            </p>
+            <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">Confirme seus dados</h1>
+            <p className="text-[#666] text-base sm:text-lg">Usaremos para gerar seu pagamento</p>
           </div>
 
-          {/* Resumo */}
           <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 sm:p-8 mb-6">
-            <div className="flex items-center justify-between pb-4 border-b border-[#e6e6e6] mb-4">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[#666] text-sm mb-2">Nome completo</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
+                  placeholder="Seu nome completo"
+                />
+              </div>
+              <div>
+                <label className="block text-[#666] text-sm mb-2">E-mail</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
+                  placeholder="seu@email.com"
+                />
+              </div>
+              <div>
+                <label className="block text-[#666] text-sm mb-2">CPF</label>
+                <input
+                  type="text"
+                  value={formData.cpf}
+                  onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+                  className="w-full border border-[#e6e6e6] rounded-lg px-4 py-3 text-[#0e0d0d] focus:outline-none focus:border-[#d60b52]"
+                  placeholder="000.000.000-00"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#f8f8f8] rounded-xl p-6 mb-8">
+            <div className="flex items-center justify-between mb-2">
               <span className="text-[#666]">Plano Sem Parar</span>
-              <span className="text-[#0e0d0d] font-semibold">TAG Pedagio + Estacionamentos</span>
-            </div>
-            <div className="flex items-center justify-between pb-4 border-b border-[#e6e6e6] mb-4">
-              <span className="text-[#666]">Valor promocional</span>
-              <span className="text-[#d60b52] font-bold text-xl">R$ {promoPrice.toFixed(2).replace('.', ',')}/mes</span>
-            </div>
-            <div className="flex items-center justify-between pb-4 border-b border-[#e6e6e6] mb-4">
-              <span className="text-[#666]">Periodo</span>
-              <span className="text-[#0e0d0d] font-semibold">{monthsFree} meses</span>
+              <span className="text-[#0e0d0d] font-semibold">TAG + Estacionamentos</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[#666]">Economia total</span>
-              <span className="text-[#0e0d0d] font-bold">R$ {((regularPrice - promoPrice) * monthsFree + 40 + 24.90).toFixed(2).replace('.', ',')}</span>
+              <span className="text-[#666]">Valor</span>
+              <span className="text-[#d60b52] font-bold text-xl">R$ {promoPrice.toFixed(2).replace('.', ',')}</span>
             </div>
           </div>
 
-          {/* Cupom */}
-          <div className="bg-[#f8f8f8] rounded-xl p-6 mb-8">
-            <p className="text-[#999] text-xs font-semibold tracking-wider mb-3">SEU CUPOM EXCLUSIVO</p>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 bg-white border-2 border-dashed border-[#d60b52] rounded-lg px-4 py-3">
-                <code className="text-[#d60b52] text-xl sm:text-2xl font-bold tracking-wider">BFVIP{lead.nrc}</code>
+          <div className="flex gap-3">
+            <button onClick={() => setStep(2)} className="flex-1 bg-white border border-[#e6e6e6] text-[#0e0d0d] font-semibold text-base py-4 rounded-xl hover:bg-[#f8f8f8] transition-colors">
+              Voltar
+            </button>
+            <button
+              onClick={generatePix}
+              disabled={loading || !formData.name || !formData.email || !formData.cpf}
+              className="flex-1 bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base py-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Gerando PIX...' : 'Pagar com PIX'}
+            </button>
+          </div>
+        </main>
+      )}
+
+      {/* Step 4: Pagamento PIX */}
+      {step === 4 && (
+        <main className="flex-1 max-w-[800px] mx-auto px-4 py-8 sm:py-12 w-full">
+          {paymentStatus === 'paid' ? (
+            <div className="text-center">
+              <div className="text-6xl mb-4">✅</div>
+              <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">Pagamento confirmado!</h1>
+              <p className="text-[#666] text-base sm:text-lg mb-8">
+                Obrigado, {lead.firstName}! Sua TAG sera enviada em breve.
+              </p>
+              <div className="bg-[#f0fff4] border border-[#86efac] rounded-xl p-6">
+                <p className="text-[#166534] font-semibold">Enviamos os detalhes para {formData.email}</p>
               </div>
-              <button
-                onClick={handleCopy}
-                className="bg-[#0e0d0d] hover:bg-[#333] text-white font-semibold px-5 py-3 rounded-lg transition-colors"
-              >
-                {copied ? 'Copiado!' : 'Copiar'}
-              </button>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-3">Pague com PIX</h1>
+                <p className="text-[#666] text-base sm:text-lg">Escaneie o QR Code ou copie o codigo</p>
+              </div>
 
-          <a
-            href={`https://www.semparar.com.br/para-voce/tag-de-pedagio?utm_source=promo&utm_campaign=bf2024&cupom=BFVIP${lead.nrc}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-[#d60b52] hover:bg-[#b20944] text-white font-semibold text-base text-center py-4 rounded-xl transition-colors mb-4"
-          >
-            Contratar agora no site Sem Parar
-          </a>
+              <div className="bg-white border border-[#e6e6e6] rounded-xl p-6 sm:p-8 mb-6 text-center">
+                <div className="bg-[#f8f8f8] rounded-xl p-6 mb-6 inline-block">
+                  {pixData?.qrCodeBase64 ? (
+                    <img src={`data:image/png;base64,${pixData.qrCodeBase64}`} alt="QR Code PIX" className="w-48 h-48 mx-auto" />
+                  ) : (
+                    <div className="w-48 h-48 bg-[#e6e6e6] rounded-lg flex items-center justify-center">
+                      <span className="text-[#999]">QR Code</span>
+                    </div>
+                  )}
+                </div>
 
-          <button
-            onClick={() => setStep(1)}
-            className="w-full text-[#666] text-sm hover:text-[#0e0d0d] transition-colors"
-          >
-            ← Voltar ao inicio
-          </button>
+                <div className="mb-6">
+                  <p className="text-[#999] text-xs mb-2">Valor</p>
+                  <p className="text-[#d60b52] text-3xl font-bold">R$ {promoPrice.toFixed(2).replace('.', ',')}</p>
+                </div>
+
+                <div className="bg-[#f8f8f8] rounded-xl p-4 mb-4">
+                  <p className="text-[#999] text-xs mb-2">PIX Copia e Cola</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-[#0e0d0d] text-xs break-all bg-white border border-[#e6e6e6] rounded-lg p-3 text-left">
+                      {pixData?.copyPaste || 'Gerando codigo...'}
+                    </code>
+                    <button
+                      onClick={handleCopyPix}
+                      className="bg-[#0e0d0d] hover:bg-[#333] text-white font-semibold px-4 py-3 rounded-lg transition-colors whitespace-nowrap"
+                    >
+                      {copied ? 'Copiado!' : 'Copiar'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-2 text-[#666] text-sm">
+                  <div className="w-2 h-2 bg-[#fbbf24] rounded-full animate-pulse"></div>
+                  Aguardando pagamento...
+                </div>
+              </div>
+
+              <button onClick={() => setStep(3)} className="w-full bg-white border border-[#e6e6e6] text-[#666] font-medium text-sm py-3 rounded-xl hover:bg-[#f8f8f8] transition-colors">
+                ← Voltar e alterar dados
+              </button>
+            </>
+          )}
         </main>
       )}
 
@@ -277,11 +392,9 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
       <footer className="border-t border-[#e6e6e6] mt-auto">
         <div className="max-w-[800px] mx-auto px-4 py-6 text-center">
           <Image src="/logo.png" alt="Sem Parar" width={80} height={24} className="h-6 w-auto mx-auto mb-4 opacity-50" />
-          <p className="text-[#999] text-xs mb-2">
-            DBTrans Internet Ltda. · CNPJ 10.558.633/0001-61
-          </p>
+          <p className="text-[#999] text-xs mb-2">DBTrans Internet Ltda. · CNPJ 10.558.633/0001-61</p>
           <p className="text-[#ccc] text-xs">
-            Oferta valida ate 30/11/2024. Apos o periodo promocional, o valor de R$ {regularPrice.toFixed(2).replace('.', ',')}/mes sera cobrado. Cancele quando quiser.
+            Oferta valida ate 30/11/2024. Apos o periodo promocional, o valor de R$ {regularPrice.toFixed(2).replace('.', ',')}/mes sera cobrado.
           </p>
         </div>
       </footer>
