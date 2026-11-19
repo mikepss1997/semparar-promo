@@ -124,7 +124,7 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           </div>
 
           {/* Titulo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold leading-tight mb-4">
               {lead.firstName}, voce foi selecionado!
             </h1>
@@ -141,20 +141,72 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
             </p>
           </div>
 
+          {/* Card com dados do cliente */}
+          <div className="bg-[#f8f8f8] rounded-xl p-5 mb-6">
+            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-[#e6e6e6]">
+              <div className="w-12 h-12 bg-[#d60b52] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                {lead.firstName.charAt(0)}
+              </div>
+              <div>
+                <p className="text-[#0e0d0d] font-semibold">{lead.nome}</p>
+                <p className="text-[#666] text-sm">{lead.cidade}/{lead.estado}</p>
+              </div>
+              <div className="ml-auto">
+                <span className="inline-block bg-[#dcfce7] text-[#166534] text-xs font-medium px-2 py-1 rounded-full">
+                  Cliente Sem Parar
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div>
+                <p className="text-[#d60b52] text-2xl font-bold">{lead.qtdVeiculos}</p>
+                <p className="text-[#666] text-xs">Veiculo{lead.qtdVeiculos !== 1 ? 's' : ''}</p>
+              </div>
+              <div>
+                <p className="text-[#d60b52] text-2xl font-bold">{lead.tags.length}</p>
+                <p className="text-[#666] text-xs">TAG{lead.tags.length !== 1 ? 's' : ''} Ativas</p>
+              </div>
+              <div className="col-span-2 sm:col-span-2">
+                <div className="flex flex-wrap gap-1 justify-center">
+                  {lead.placas.slice(0, 3).map((placa, i) => (
+                    <span key={i} className="bg-white border border-[#e6e6e6] text-[#0e0d0d] text-xs font-mono px-2 py-1 rounded">
+                      {placa}
+                    </span>
+                  ))}
+                  {lead.placas.length > 3 && (
+                    <span className="text-[#666] text-xs py-1">+{lead.placas.length - 3}</span>
+                  )}
+                </div>
+                <p className="text-[#666] text-xs mt-1">Placas Cadastradas</p>
+              </div>
+            </div>
+          </div>
+
           {/* Beneficios Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[
               { icon: '🚗', line1: '1 Ano Sem', line2: 'Pedagio' },
               { icon: '🅿️', line1: '1 Ano Sem', line2: 'Estacionamento' },
               { icon: '🍔', line1: '30% OFF', line2: "McDonald's" },
               { icon: '⛽', line1: '-R$ 0,20', line2: '/Litro' },
             ].map((item, i) => (
-              <div key={i} className="bg-[#f8f8f8] rounded-xl p-5 text-center">
-                <span className="text-3xl mb-2 block">{item.icon}</span>
-                <p className="text-[#0e0d0d] text-sm font-semibold">{item.line1}</p>
-                <p className="text-[#0e0d0d] text-sm font-semibold">{item.line2}</p>
+              <div key={i} className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
+                <span className="text-2xl mb-1 block">{item.icon}</span>
+                <p className="text-[#0e0d0d] text-xs font-semibold">{item.line1}</p>
+                <p className="text-[#0e0d0d] text-xs font-semibold">{item.line2}</p>
               </div>
             ))}
+          </div>
+
+          {/* Info adicional */}
+          <div className="flex items-center justify-center gap-6 mb-6 text-sm text-[#666]">
+            <span className="flex items-center gap-1">
+              <span className="text-[#16a34a]">✓</span> Sem fidelidade
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="text-[#16a34a]">✓</span> Cancele quando quiser
+            </span>
           </div>
 
           {/* CTA */}
