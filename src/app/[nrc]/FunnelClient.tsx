@@ -2,66 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
-// Icones SVG
-const IconRoad = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M4 19L8 5M16 19L12 5M9 19H5M19 19H15M12 19H10M7 12H6M18 12H17M12 12H11" strokeLinecap="round"/>
-  </svg>
-);
-
-const IconParking = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-    <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/>
-    <path d="M9 17V7h4a3 3 0 0 1 0 6H9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-
-const IconBurger = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M3 11h18M3 15h18M5 11c0-4 3-6 7-6s7 2 7 6M5 15c0 2 2 4 7 4s7-2 7-4" strokeLinecap="round"/>
-  </svg>
-);
-
-const IconFuel = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16M6 12h6M17 12l2-2v6a2 2 0 0 0 4 0V8l-4-4" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const IconBox = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16v-2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const IconPhone = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="5" y="2" width="14" height="20" rx="2"/>
-    <path d="M12 18h.01" strokeLinecap="round"/>
-  </svg>
-);
-
-const IconMail = () => (
-  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="2" y="4" width="20" height="16" rx="2"/>
-    <path d="M22 6L12 13 2 6" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const IconLock = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="3" y="11" width="18" height="11" rx="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  </svg>
-);
-
-const IconCheck = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+import {
+  Car,
+  ParkingCircle,
+  Fuel,
+  Package,
+  Smartphone,
+  Mail,
+  ShieldCheck,
+  Check,
+  CircleCheckBig
+} from 'lucide-react';
 
 interface LeadData {
   nrc: number;
@@ -246,22 +197,30 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           {/* Beneficios Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2"><IconRoad /></div>
+              <div className="text-[#d60b52] flex justify-center mb-2">
+                <Car className="w-8 h-8" strokeWidth={1.5} />
+              </div>
               <p className="text-[#0e0d0d] text-xs font-semibold">1 Ano Sem</p>
               <p className="text-[#0e0d0d] text-xs font-semibold">Pedagio</p>
             </div>
             <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2"><IconParking /></div>
+              <div className="text-[#d60b52] flex justify-center mb-2">
+                <ParkingCircle className="w-8 h-8" strokeWidth={1.5} />
+              </div>
               <p className="text-[#0e0d0d] text-xs font-semibold">1 Ano Sem</p>
               <p className="text-[#0e0d0d] text-xs font-semibold">Estacionamento</p>
             </div>
             <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2"><IconBurger /></div>
+              <div className="flex justify-center mb-2">
+                <Image src="/mcdonalds.svg" alt="McDonald's" width={32} height={32} className="h-8 w-auto" />
+              </div>
               <p className="text-[#0e0d0d] text-xs font-semibold">30% OFF</p>
               <p className="text-[#0e0d0d] text-xs font-semibold">McDonald's</p>
             </div>
             <div className="bg-white border border-[#e6e6e6] rounded-xl p-4 text-center">
-              <div className="text-[#d60b52] flex justify-center mb-2"><IconFuel /></div>
+              <div className="text-[#d60b52] flex justify-center mb-2">
+                <Fuel className="w-8 h-8" strokeWidth={1.5} />
+              </div>
               <p className="text-[#0e0d0d] text-xs font-semibold">-R$ 0,20</p>
               <p className="text-[#0e0d0d] text-xs font-semibold">/Litro</p>
             </div>
@@ -269,11 +228,11 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
 
           {/* Info adicional */}
           <div className="flex items-center justify-center gap-6 mb-6 text-sm text-[#666]">
-            <span className="flex items-center gap-1">
-              <span className="text-[#16a34a]"><IconCheck /></span> Sem fidelidade
+            <span className="flex items-center gap-1.5">
+              <Check className="w-4 h-4 text-[#16a34a]" strokeWidth={2.5} /> Sem fidelidade
             </span>
-            <span className="flex items-center gap-1">
-              <span className="text-[#16a34a]"><IconCheck /></span> Cancele quando quiser
+            <span className="flex items-center gap-1.5">
+              <Check className="w-4 h-4 text-[#16a34a]" strokeWidth={2.5} /> Cancele quando quiser
             </span>
           </div>
 
@@ -385,11 +344,11 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           {/* Selos de seguranca */}
           <div className="flex items-center justify-center gap-8 mb-6">
             <div className="flex items-center gap-2 text-[#666] text-sm">
-              <span className="text-[#16a34a]"><IconLock /></span>
+              <ShieldCheck className="w-5 h-5 text-[#16a34a]" strokeWidth={1.5} />
               <span>Ambiente 100% Seguro</span>
             </div>
             <div className="flex items-center gap-2 text-[#666] text-sm">
-              <span className="text-[#d60b52]"><IconCheck /></span>
+              <CircleCheckBig className="w-5 h-5 text-[#d60b52]" strokeWidth={1.5} />
               <span>Sem Parar Oficial</span>
             </div>
           </div>
@@ -418,9 +377,7 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           {/* Check icon */}
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-[#dcfce7] rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-[#16a34a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <Check className="w-10 h-10 text-[#16a34a]" strokeWidth={3} />
             </div>
             <h1 className="text-[#0e0d0d] text-2xl sm:text-[32px] font-bold mb-2">
               Assinatura Confirmada!
@@ -433,8 +390,8 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
           {/* Proximos passos */}
           <div className="max-w-md mx-auto space-y-4">
             <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52]">
-                <IconBox />
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
+                <Package className="w-6 h-6" strokeWidth={1.5} />
               </div>
               <div>
                 <p className="text-[#0e0d0d] font-semibold">Envio da TAG para seu endereco</p>
@@ -442,8 +399,8 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               </div>
             </div>
             <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52]">
-                <IconPhone />
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
+                <Smartphone className="w-6 h-6" strokeWidth={1.5} />
               </div>
               <div>
                 <p className="text-[#0e0d0d] font-semibold">Acesso imediato no App Sem Parar</p>
@@ -451,8 +408,8 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               </div>
             </div>
             <div className="flex items-center gap-4 bg-[#f8f8f8] rounded-xl p-5">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52]">
-                <IconMail />
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#d60b52] shadow-sm">
+                <Mail className="w-6 h-6" strokeWidth={1.5} />
               </div>
               <div>
                 <p className="text-[#0e0d0d] font-semibold">Comprovante enviado por E-mail</p>
