@@ -169,27 +169,69 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            {/* Veiculos e TAGs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              {/* Placas Mercosul */}
               <div>
-                <p className="text-[#d60b52] text-2xl font-bold">{lead.qtdVeiculos}</p>
-                <p className="text-[#666] text-xs">Veiculo{lead.qtdVeiculos !== 1 ? 's' : ''}</p>
-              </div>
-              <div>
-                <p className="text-[#d60b52] text-2xl font-bold">{lead.tags.length}</p>
-                <p className="text-[#666] text-xs">TAG{lead.tags.length !== 1 ? 's' : ''} Ativas</p>
-              </div>
-              <div className="col-span-2 sm:col-span-2">
-                <div className="flex flex-wrap gap-1 justify-center">
+                <p className="text-[#666] text-xs mb-2 text-center">{lead.qtdVeiculos} Veiculo{lead.qtdVeiculos !== 1 ? 's' : ''} Cadastrado{lead.qtdVeiculos !== 1 ? 's' : ''}</p>
+                <div className="flex flex-wrap gap-2 justify-center">
                   {lead.placas.slice(0, 3).map((placa, i) => (
-                    <span key={i} className="bg-white border border-[#e6e6e6] text-[#0e0d0d] text-xs font-mono px-2 py-1 rounded">
-                      {placa}
-                    </span>
+                    <div key={i} className="relative">
+                      {/* Placa Mercosul */}
+                      <div className="bg-white rounded-md overflow-hidden shadow-sm border border-[#ccc]" style={{ width: '90px' }}>
+                        {/* Faixa azul superior */}
+                        <div className="bg-[#003399] h-4 flex items-center justify-between px-1">
+                          <div className="flex items-center gap-0.5">
+                            <div className="w-2 h-2 rounded-full bg-[#009c3b]"></div>
+                            <div className="w-2 h-2 rounded-full bg-[#ffdf00]"></div>
+                          </div>
+                          <span className="text-white text-[6px] font-bold">BRASIL</span>
+                          <div className="w-3 h-2 bg-[#009c3b] rounded-sm flex items-center justify-center">
+                            <span className="text-white text-[5px]">BR</span>
+                          </div>
+                        </div>
+                        {/* Numero da placa */}
+                        <div className="bg-white py-1.5 px-1">
+                          <p className="text-[#0e0d0d] text-sm font-bold font-mono text-center tracking-wider">
+                            {placa}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                   {lead.placas.length > 3 && (
-                    <span className="text-[#666] text-xs py-1">+{lead.placas.length - 3}</span>
+                    <div className="flex items-center text-[#666] text-xs">+{lead.placas.length - 3}</div>
                   )}
                 </div>
-                <p className="text-[#666] text-xs mt-1">Placas Cadastradas</p>
+              </div>
+
+              {/* TAGs Sem Parar */}
+              <div>
+                <p className="text-[#666] text-xs mb-2 text-center">{lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''} Ativa{lead.tags.length !== 1 ? 's' : ''}</p>
+                <div className="flex justify-center">
+                  {/* TAG estilizada */}
+                  <div className="relative">
+                    <div className="bg-gradient-to-b from-[#FFE500] to-[#FFD000] rounded-lg p-3 shadow-md border border-[#e6b800]" style={{ width: '120px' }}>
+                      {/* Logo Sem Parar na TAG */}
+                      <div className="bg-[#d60b52] rounded px-2 py-0.5 mb-2">
+                        <p className="text-white text-[8px] font-bold text-center tracking-tight">SEM PARAR</p>
+                      </div>
+                      {/* Numeros das TAGs */}
+                      <div className="space-y-1">
+                        {lead.tags.slice(0, 3).map((tag, i) => (
+                          <div key={i} className="bg-white/60 rounded px-1.5 py-0.5">
+                            <p className="text-[#333] text-[9px] font-mono text-center">{tag}</p>
+                          </div>
+                        ))}
+                      </div>
+                      {lead.tags.length > 3 && (
+                        <p className="text-[#666] text-[8px] text-center mt-1">+{lead.tags.length - 3} mais</p>
+                      )}
+                      {/* Chip da TAG */}
+                      <div className="absolute top-2 right-2 w-4 h-3 bg-gradient-to-br from-[#c0c0c0] to-[#808080] rounded-sm"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
