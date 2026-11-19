@@ -1,26 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Sem Parar | Black Friday 2024 - Oferta Exclusiva",
-  description: "Ate 12 meses de mensalidade gratis + adesao zero + frete gratis. Oferta exclusiva Black Friday Sem Parar.",
+  title: "Sem Parar | Oferta Exclusiva Black Friday",
+  description: "Sua oferta personalizada Sem Parar. Plano completo com ate 12 meses de desconto, adesao gratis e frete gratis.",
   openGraph: {
-    title: "Sem Parar | Black Friday 2024",
-    description: "Ate 12 meses de mensalidade gratis na sua TAG!",
+    title: "Sem Parar | Oferta Exclusiva",
+    description: "Plano completo com desconto exclusivo para voce.",
     type: "website",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} antialiased`}>
-      <body className="min-h-screen bg-black">{children}</body>
+    <html lang="pt-BR">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body className="font-['Hanken_Grotesk',system-ui,sans-serif] antialiased">{children}</body>
     </html>
   );
 }
