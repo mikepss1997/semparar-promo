@@ -114,20 +114,20 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
 
   // Placa Mercosul Component
   const PlacaMercosul = ({ placa }: { placa: string }) => (
-    <div className="flex-shrink-0">
-      <div className="bg-white rounded-[4px] overflow-hidden shadow-sm border border-[#d1d5db]" style={{ width: '88px' }}>
-        <div className="bg-[#003893] h-[14px] flex items-center justify-between px-1.5">
-          <div className="flex items-center gap-[2px]">
-            <div className="w-[5px] h-[5px] rounded-full bg-[#009739]"></div>
-            <div className="w-[5px] h-[5px] rounded-full bg-[#FEDD00]"></div>
+    <div className="w-[calc(50%-4px)]">
+      <div className="bg-white rounded-[5px] overflow-hidden shadow-sm border border-[#d1d5db]">
+        <div className="bg-[#003893] h-[16px] flex items-center justify-between px-2">
+          <div className="flex items-center gap-[3px]">
+            <div className="w-[6px] h-[6px] rounded-full bg-[#009739]"></div>
+            <div className="w-[6px] h-[6px] rounded-full bg-[#FEDD00]"></div>
           </div>
-          <span className="text-white text-[5px] font-semibold tracking-wide">BRASIL</span>
-          <div className="bg-[#009739] rounded-[2px] px-[3px] py-[1px]">
-            <span className="text-white text-[4px] font-bold">BR</span>
+          <span className="text-white text-[6px] font-semibold tracking-wide">BRASIL</span>
+          <div className="bg-[#009739] rounded-[2px] px-1 py-[2px]">
+            <span className="text-white text-[5px] font-bold">BR</span>
           </div>
         </div>
-        <div className="bg-white py-[6px]">
-          <p className="text-[#1a1a1a] text-[13px] font-bold font-mono text-center tracking-[0.08em]">
+        <div className="bg-white py-2">
+          <p className="text-[#1a1a1a] text-[15px] font-bold font-mono text-center tracking-[0.1em]">
             {placa}
           </p>
         </div>
@@ -137,14 +137,14 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
 
   // TAG Sem Parar Component
   const TagSemParar = ({ numero }: { numero: string }) => (
-    <div className="flex-shrink-0">
-      <div className="bg-white rounded-[4px] overflow-hidden shadow-sm border border-[#d1d5db]" style={{ width: '88px' }}>
-        <div className="bg-gradient-to-r from-[#FFD000] to-[#FFBA00] h-[14px] flex items-center justify-center gap-1">
-          <div className="w-[4px] h-[4px] rounded-full bg-[#d60b52]"></div>
-          <span className="text-[#1a1a1a] text-[5px] font-bold tracking-wide">SEM PARAR</span>
+    <div className="w-[calc(50%-4px)]">
+      <div className="bg-white rounded-[5px] overflow-hidden shadow-sm border border-[#d1d5db]">
+        <div className="bg-gradient-to-r from-[#FFD000] to-[#FFBA00] h-[16px] flex items-center justify-center gap-1.5">
+          <div className="w-[5px] h-[5px] rounded-full bg-[#d60b52]"></div>
+          <span className="text-[#1a1a1a] text-[6px] font-bold tracking-wide">SEM PARAR</span>
         </div>
-        <div className="bg-white py-[6px]">
-          <p className="text-[#1a1a1a] text-[10px] font-semibold font-mono text-center tracking-wide">
+        <div className="bg-white py-2">
+          <p className="text-[#1a1a1a] text-[12px] font-semibold font-mono text-center tracking-wider">
             {numero}
           </p>
         </div>
@@ -216,33 +216,33 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
 
               {/* Placas e TAGs */}
               <div className="p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-5">
                   {/* Placas */}
                   <div>
-                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3">
-                      {lead.placas.length} Veiculo{lead.placas.length !== 1 ? 's' : ''} cadastrado{lead.placas.length !== 1 ? 's' : ''}
+                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3 text-center">
+                      {lead.placas.length} Veiculo{lead.placas.length !== 1 ? 's' : ''}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {lead.placas.slice(0, 3).map((placa, i) => (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {lead.placas.slice(0, 4).map((placa, i) => (
                         <PlacaMercosul key={i} placa={placa} />
                       ))}
-                      {lead.placas.length > 3 && (
-                        <span className="text-[#9ca3af] text-xs self-center">+{lead.placas.length - 3}</span>
+                      {lead.placas.length > 4 && (
+                        <p className="w-full text-[#9ca3af] text-xs text-center mt-1">+{lead.placas.length - 4} mais</p>
                       )}
                     </div>
                   </div>
 
                   {/* TAGs */}
                   <div>
-                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3">
-                      {lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''} ativa{lead.tags.length !== 1 ? 's' : ''}
+                    <p className="text-[#6b7280] text-[11px] font-medium uppercase tracking-wider mb-3 text-center">
+                      {lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {lead.tags.slice(0, 3).map((tag, i) => (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {lead.tags.slice(0, 4).map((tag, i) => (
                         <TagSemParar key={i} numero={tag} />
                       ))}
-                      {lead.tags.length > 3 && (
-                        <span className="text-[#9ca3af] text-xs self-center">+{lead.tags.length - 3}</span>
+                      {lead.tags.length > 4 && (
+                        <p className="w-full text-[#9ca3af] text-xs text-center mt-1">+{lead.tags.length - 4} mais</p>
                       )}
                     </div>
                   </div>
