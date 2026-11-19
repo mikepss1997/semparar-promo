@@ -208,29 +208,25 @@ export default function FunnelClient({ lead }: { lead: LeadData }) {
               {/* TAGs Sem Parar */}
               <div>
                 <p className="text-[#666] text-xs mb-2 text-center">{lead.tags.length} TAG{lead.tags.length !== 1 ? 's' : ''} Ativa{lead.tags.length !== 1 ? 's' : ''}</p>
-                <div className="flex justify-center">
-                  {/* TAG estilizada */}
-                  <div className="relative">
-                    <div className="bg-gradient-to-b from-[#FFE500] to-[#FFD000] rounded-lg p-3 shadow-md border border-[#e6b800]" style={{ width: '120px' }}>
-                      {/* Logo Sem Parar na TAG */}
-                      <div className="bg-[#d60b52] rounded px-2 py-0.5 mb-2">
-                        <p className="text-white text-[8px] font-bold text-center tracking-tight">SEM PARAR</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {lead.tags.slice(0, 3).map((tag, i) => (
+                    <div key={i} className="bg-white rounded-md overflow-hidden shadow-sm border border-[#e6e6e6]" style={{ width: '90px' }}>
+                      {/* Header amarelo */}
+                      <div className="bg-gradient-to-r from-[#FFD100] to-[#FFC000] px-2 py-1 flex items-center justify-center gap-1">
+                        <div className="w-1.5 h-1.5 bg-[#d60b52] rounded-full"></div>
+                        <span className="text-[#0e0d0d] text-[7px] font-bold">SEM PARAR</span>
                       </div>
-                      {/* Numeros das TAGs */}
-                      <div className="space-y-1">
-                        {lead.tags.slice(0, 3).map((tag, i) => (
-                          <div key={i} className="bg-white/60 rounded px-1.5 py-0.5">
-                            <p className="text-[#333] text-[9px] font-mono text-center">{tag}</p>
-                          </div>
-                        ))}
+                      {/* Numero da TAG */}
+                      <div className="bg-white py-1.5 px-1">
+                        <p className="text-[#0e0d0d] text-[10px] font-mono text-center tracking-tight">
+                          {tag}
+                        </p>
                       </div>
-                      {lead.tags.length > 3 && (
-                        <p className="text-[#666] text-[8px] text-center mt-1">+{lead.tags.length - 3} mais</p>
-                      )}
-                      {/* Chip da TAG */}
-                      <div className="absolute top-2 right-2 w-4 h-3 bg-gradient-to-br from-[#c0c0c0] to-[#808080] rounded-sm"></div>
                     </div>
-                  </div>
+                  ))}
+                  {lead.tags.length > 3 && (
+                    <div className="flex items-center text-[#666] text-xs">+{lead.tags.length - 3}</div>
+                  )}
                 </div>
               </div>
             </div>
